@@ -6,7 +6,6 @@
 import numpy as np
 import sys
 import math
-#sys.path.insert(1, '/home/ahmed-hamdy/intern work/maskSiam object tracking/SiamMask-master (copy)/utils')
 from bbox_helper import center2corner, corner2center
 
 

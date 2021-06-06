@@ -23,8 +23,8 @@ class TrackingManager:
             "/home/saad/Downloads/SiamMaskTracking/maskSiam object tracking/SiamMask-master (copy)/experiments/siammask_sharp")
         # os.chdir('/home/innolab/ads/application/detection/ads_detection/SiamMaskTracking/maskSiam object tracking/SiamMask-master (copy)/experiments/siammask_sharp')
         # print(os.getcwd())
-        resume = '/home/saad/Downloads/SiamMaskTracking/maskSiam object tracking/SiamMask-master (copy)/experiments/siammask_sharp/SiamMask_DAVIS.pth'
-        config = '/home/saad/Downloads/SiamMaskTracking/maskSiam object tracking/SiamMask-master (copy)/experiments/siammask_sharp/config_davis.json'
+        resume = '/home/saad/Root/vision/Computer_Vision/Tracking-systems/SiamMask_DAVIS.pth'
+        config = '/home/saad/Root/vision/Computer_Vision/Tracking-systems/config_davis.json'
 
         torch.backends.cudnn.benchmark = True
         # sys.path.insert(1, str(
