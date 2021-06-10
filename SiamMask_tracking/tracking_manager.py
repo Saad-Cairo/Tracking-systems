@@ -1,49 +1,31 @@
 import sys
-# sys.path.insert(1, '../siamMask multi object tracking/maskSiam object tracking/SiamMask-master (copy)/tools')
+
 from collections import deque
 from Frame_manager import *
 import torch
 import os
-# print(sys.path)
+
 import argparse
 import pathlib
-# sys.path.append('../a.hamdy-repo-master-siamMask multi object tracking/siamMask multi object tracking/maskSiam object tracking/SiamMask-master (copy)/tools')
 from os.path import isfile
 from skvideo import io
 from output_saver import *
 from utils import *
 import glob
+from config_helper import load_config
+from custom import Custom
+from load_helper import load_pretrain
+from test import siamese_init, siamese_track
 
 
 class TrackingManager:
 
     def __init__(self, detection_csv_path, imgs_path, buffer_size, output_coordinator, out_vid_path, sampling_ratio):
-        # os.chdir(os.getcwd()+'/maskSiam object tracking/SiamMask-master (copy)/experiments/siammask_sharp')
-        os.chdir(
-            "/home/saad/Downloads/SiamMaskTracking/maskSiam object tracking/SiamMask-master (copy)/experiments/siammask_sharp")
-        # os.chdir('/home/innolab/ads/application/detection/ads_detection/SiamMaskTracking/maskSiam object tracking/SiamMask-master (copy)/experiments/siammask_sharp')
-        # print(os.getcwd())
         resume = '/home/saad/Root/vision/Computer_Vision/Tracking-systems/SiamMask_DAVIS.pth'
         config = '/home/saad/Root/vision/Computer_Vision/Tracking-systems/config_davis.json'
-
-        torch.backends.cudnn.benchmark = True
-        # sys.path.insert(1, str(
-        #     pathlib.Path(__file__).parent.absolute()) + '/maskSiam object tracking/SiamMask-master (copy)/utils')
-        sys.path.insert(1,
-                        "/home/saad/Downloads/SiamMaskTracking/maskSiam object tracking/SiamMask-master (copy)/utils")
-
-        from config_helper import load_config
         self.cfg = load_config(config=config)
-        sys.path.insert(1,
-                        "/home/saad/Downloads/SiamMaskTracking/maskSiam object tracking/SiamMask-master (copy)/experiments/siammask_sharp")
-        from custom import Custom
         self.siammask = Custom(anchors=self.cfg['anchors'])
-        if resume is not None:
-            assert isfile(resume), 'Please download {} first.'.format(resume)
-            sys.path.insert(1,
-                            "/home/saad/Downloads/SiamMaskTracking/maskSiam object tracking/SiamMask-master (copy)/utils/load_helper")
-            from load_helper import load_pretrain
-            self.siammask = load_pretrain(self.siammask, resume)
+        self.siammask = load_pretrain(self.siammask, resume)
 
         self.detection_csv_path = detection_csv_path
         self.sampling_ratio = sampling_ratio
@@ -62,9 +44,6 @@ class TrackingManager:
 
     def track(self):
 
-        sys.path.insert(1, str(
-            pathlib.Path(__file__).parent.absolute()) + '/maskSiam object tracking/SiamMask-master (copy)/tools')
-        from test import siamese_init, siamese_track
         self.fm.fill_buffer(self.queue, self.buffer_size)
         # self.fm.get_next_frame(self.queue)
         i = 0
@@ -111,12 +90,7 @@ class TrackingManager:
 
                     target = state['targets'][t]
 
-                    location = target['ploygon'].flatten()
-                    mask = target['mask'] > state['p'].seg_thr
-                    # mask = target['mask'] > state['p'].seg_thr
-                    # frame[:, :, 2] = (mask > 0) * 255 + (mask == 0) * frame[:, :, 2]
                     boxx = self.select_matching_box(target['ploygon'], frame)
-                    # cv2.polylines(frame.img, [np.int0(location).reshape((-1, 1, 2))], True, (0, 255, 0), 3)
                     state['targets'][t]['ploygon'] = [[boxx.x1, boxx.y1], [boxx.x1, boxx.y2], [boxx.x2, boxx.y2],
                                                       [boxx.x2, boxx.y1]]
                     # assign ID to the tracked object

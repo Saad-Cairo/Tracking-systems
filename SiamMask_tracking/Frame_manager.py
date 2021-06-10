@@ -85,7 +85,6 @@ class FrameManager:
         self.last_added_frame_index = frame.frame_indx
         self.last_readed_row = j - 1
 
-
     def get_next_frame(self, frame_queue):
         """
         fill the buffer with the next frame and remove the first one.

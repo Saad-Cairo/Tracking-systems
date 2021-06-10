@@ -1,9 +1,10 @@
 from tracking_manager import *
 from output_saver import *
 
-class TrackingPipeline:
-    def __init__(self, detection_csv_path, imgs_path, buffer_size, pickle_path, output_path, out_vid_path, make_vid, sampling_ratio=60):
 
+class TrackingPipeline:
+    def __init__(self, detection_csv_path, imgs_path, buffer_size, pickle_path, output_path, out_vid_path, make_vid,
+                 sampling_ratio=60):
         self.detection_csv_path = detection_csv_path
         self.imgs_path = imgs_path
         self.output_coordinator = Output_coordinator(pickle_path, output_path, imgs_path)
@@ -13,7 +14,6 @@ class TrackingPipeline:
 
     def run_pipeline(self):
         tracks = self.tracking_manager.track()
-        #pathlib.Path(__file__).parent.absolute()
         t = torch.cuda.get_device_properties(0).total_memory
         r = torch.cuda.memory_reserved(0)
         a = torch.cuda.memory_allocated(0)
@@ -39,5 +39,3 @@ if __name__ == '__main__':
     tracking_pipeline = TrackingPipeline(detection_csv_file, detection_path, 10,
                                          pickle_path, output_path, out_vid_path, make_vid=True)
     tracking_pipeline.run_pipeline()
-
-
